@@ -1,9 +1,9 @@
 FROM ubuntu:16.04
 LABEL maintainer "Wentao Han <wentao.han@gmail.com>"
 
-ENV HADOOP_VERSION 2.8.0
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
-ENV HADOOP_HOME /opt/hadoop
+ENV HADOOP_VERSION 2.8.0
+ENV HADOOP_PREFIX /opt/hadoop
 
 RUN apt-get update && apt-get install -y \
     openjdk-8-jdk-headless \
@@ -26,14 +26,15 @@ RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -N "" \
  && mkdir -p /var/run/sshd
 
 # Set up Hadoop environment
-ADD hadoop/etc/hadoop/* $HADOOP_HOME/etc/hadoop/
+ADD hadoop/etc/hadoop/* $HADOOP_PREFIX/etc/hadoop/
 
 # Initialize HDFS
 RUN rm -rf /tmp/* \
- && $HADOOP_HOME/bin/hdfs namenode -format
+ && $HADOOP_PREFIX/bin/hdfs namenode -format
 
 # Add supervisor configuration
 ADD supervisor/*.conf /etc/supervisor/conf.d/
 
+WORKDIR $HADOOP_PREFIX
 EXPOSE 8088 50070
 ENTRYPOINT /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf

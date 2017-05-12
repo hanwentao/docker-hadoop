@@ -1,0 +1,3 @@
+HashKnownHosts no
+StrictHostKeyChecking no
+SendEnv PATH JAVA_HOME HADOOP_HOME

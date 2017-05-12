@@ -23,7 +23,6 @@ WORKDIR /root
 ADD ssh/config .ssh/config
 RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -N "" \
  && cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys \
- && echo "AcceptEnv PATH JAVA_HOME HADOOP_HOME" >>/etc/ssh/sshd_config \
  && mkdir -p /var/run/sshd
 
 # Set up Hadoop environment

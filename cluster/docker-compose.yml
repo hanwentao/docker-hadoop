@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  master:
+    build: ..
+    environment:
+      HADOOP_ROLES: namenode,resourcemanager
+    ports:
+      - 127.0.0.1:50070:50070
+      - 127.0.0.1:8088:8088
+    depends_on:
+      - slave0
+      - slave1
+      - slave2
+      - slave3
+  slave0:
+    build: ..
+  slave1:
+    build: ..
+  slave2:
+    build: ..
+  slave3:
+    build: ..

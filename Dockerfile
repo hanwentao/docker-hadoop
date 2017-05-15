@@ -9,32 +9,23 @@ RUN apt-get update && apt-get install -y \
     openjdk-8-jdk-headless \
     openssh-server \
     rsync \
-    supervisor \
  && rm -rf /var/lib/apt/lists/*
 
 # Set up Hadoop files
-WORKDIR /opt
-ADD packages/hadoop-$HADOOP_VERSION.tar.gz .
-RUN chown -R root:root hadoop-$HADOOP_VERSION \
- && ln -s hadoop-$HADOOP_VERSION hadoop
+ADD packages/hadoop-$HADOOP_VERSION.tar.gz /opt
+RUN chown -R root:root /opt/hadoop-$HADOOP_VERSION \
+ && ln -s hadoop-$HADOOP_VERSION /opt/hadoop
 
 # Set up ssh without password
-WORKDIR /root
-ADD ssh/config .ssh/config
-RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -N "" \
- && cat ~/.ssh/id_rsa.pub >>~/.ssh/authorized_keys \
+RUN ssh-keygen -t rsa -f /root/.ssh/id_rsa -N "" \
+ && cat /root/.ssh/id_rsa.pub >>/root/.ssh/authorized_keys \
+ && echo "HashKnownHosts no" >>/root/.ssh/config \
+ && echo "StrictHostKeyChecking no" >>/root/.ssh/config \
  && mkdir -p /var/run/sshd
 
 # Set up Hadoop environment
-ADD hadoop/etc/hadoop/* $HADOOP_PREFIX/etc/hadoop/
-
-# Initialize HDFS
-RUN rm -rf /tmp/* \
- && $HADOOP_PREFIX/bin/hdfs namenode -format
-
-# Add supervisor configuration
-ADD supervisor/*.conf /etc/supervisor/conf.d/
+ADD conf/hadoop/* $HADOOP_PREFIX/etc/hadoop/
 
 WORKDIR $HADOOP_PREFIX
-EXPOSE 8088 50070
-ENTRYPOINT /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/sbin/sshd", "-D"]

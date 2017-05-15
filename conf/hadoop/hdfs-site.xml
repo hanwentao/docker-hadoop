@@ -1,0 +1,10 @@
+<configuration>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/var/lib/hadoop/dfs/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/var/lib/hadoop/dfs/data</value>
+    </property>
+</configuration>

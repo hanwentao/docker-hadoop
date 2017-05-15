@@ -13,6 +13,7 @@ This project aims to run Hadoop in Docker containers.
 2. Launch containers by docker-compose.
 
 ```
+cd cluster
 docker-compose up -d --build
 ```
 

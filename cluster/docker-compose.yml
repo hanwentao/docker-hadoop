@@ -4,7 +4,8 @@ services:
   master:
     build: ..
     environment:
-      HADOOP_ROLES: namenode,resourcemanager
+      IS_HDFS_MASTER: "true"
+      IS_YARN_MASTER: "true"
     ports:
       - 127.0.0.1:50070:50070
       - 127.0.0.1:8088:8088

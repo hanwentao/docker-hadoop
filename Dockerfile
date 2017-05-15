@@ -21,11 +21,14 @@ RUN ssh-keygen -t rsa -f /root/.ssh/id_rsa -N "" \
  && cat /root/.ssh/id_rsa.pub >>/root/.ssh/authorized_keys \
  && echo "HashKnownHosts no" >>/root/.ssh/config \
  && echo "StrictHostKeyChecking no" >>/root/.ssh/config \
+ && echo "SendEnv JAVA_HOME HADOOP_PREFIX" >>/root/.ssh/config \
+ && echo "AcceptEnv JAVA_HOME HADOOP_PREFIX" >>/etc/ssh/sshd_config \
  && mkdir -p /var/run/sshd
 
 # Set up Hadoop environment
 ADD conf/hadoop/* $HADOOP_PREFIX/etc/hadoop/
 
+ENV USER root
 WORKDIR $HADOOP_PREFIX
+ADD entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/usr/sbin/sshd", "-D"]

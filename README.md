@@ -14,7 +14,13 @@ This project aims to run Hadoop in Docker containers.
 
 ```
 cd cluster
-docker-compose up -d --build
+docker-compose up -d  # Add --build if Dockerfile is modified
+```
+
+3. Enter the shell.
+
+```
+docker-compose exec master bash
 ```
 
 And enjoy yourself!
